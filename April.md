@@ -106,3 +106,64 @@ class Solution:
 ```
 ### Complexity: O(n) , space: O(1)
 -----------------------
+5) https://leetcode.com/problems/best-time-to-buy-and-sell-stock-ii/ </br>
+Say you have an array prices for which the ith element is the price of a given stock on day i.
+Design an algorithm to find the maximum profit. You may complete as many transactions as you like (i.e., buy one and sell one share of the stock multiple times).
+Note: You may not engage in multiple transactions at the same time (i.e., you must sell the stock before you buy again)
+
+```python
+class Solution:
+    def maxProfit(self, prices: List[int]) -> int:
+        
+        length = len(prices)
+        
+        if length == 1:
+            return 0
+        
+        profit = 0
+        
+        for i in range(length - 1):
+            if prices[i+1] > prices[i]:
+                profit += prices[i+1] - prices[i]
+
+        return profit
+```
+### Complexity: O(n) , space: O(1)
+-----------------------
+6) https://leetcode.com/problems/group-anagrams/ </br>
+Given an array of strings, group anagrams together.<br>
+Example:<br>
+Input: ["eat", "tea", "tan", "ate", "nat", "bat"]<br>
+Output:
+[
+  ["ate","eat","tea"],
+  ["nat","tan"],
+  ["bat"]
+]<br>
+Note:<br>
+All inputs will be in lowercase.<br>
+The order of your output does not matter.
+
+```python
+class Solution:
+    def groupAnagrams(self, strs: List[str]) -> List[List[str]]:
+        
+        dic = {}
+        
+        for word in strs:
+            s = ''.join(sorted(word))
+            if s in dic:
+                dic[s].append(word)
+            else:
+                dic[s] = [word]
+                
+        result = []
+        
+        for k,v in dic.items():
+            result.append(v)
+            
+        return result
+        
+```
+### Complexity: O( nlen(word)log(len(word)) ) , space: O(n)
+-----------------------
