@@ -167,3 +167,138 @@ class Solution:
 ```
 ### Complexity: O( nlen(word)log(len(word)) ) , space: O(n)
 -----------------------
+8) https://leetcode.com/problems/middle-of-the-linked-list/ </br>
+Given a non-empty, singly linked list with head node head, return a middle node of linked list.
+If there are two middle nodes, return the second middle node.
+```python
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+
+class Solution:
+    def middleNode(self, head: ListNode) -> ListNode:
+               
+        # Can be solved by 2 pointers instead and it will be in opne pass 
+        
+        if not head:
+            return head
+        
+        ptr = head
+        nodes_counter = 1
+        
+        while ptr.next:
+            nodes_counter += 1
+            ptr = ptr.next
+            
+        pos = nodes_counter // 2
+        
+        ptr = head
+        while pos != 0:
+            pos -= 1
+            ptr = ptr.next
+            
+        return ptr
+```
+### Complexity: O(n) , space: O(1)
+-----------------------
+9) https://leetcode.com/problems/backspace-string-compare/ </br>
+Given two strings S and T, return if they are equal when both are typed into empty text editors. # means a backspace character.
+
+Note that after backspacing an empty text, the text will continue empty.
+```python
+class Solution(object):
+    def backspaceCompare(self, S, T):
+        """
+        :type S: str
+        :type T: str
+        :rtype: bool
+        """
+        new_s = ''
+        new_t = ''
+        
+        for char in S:
+            if char == '#':
+                if  len(new_s) != 0:
+                    new_s = new_s[0:-1]
+            else:
+                new_s = new_s + char
+                
+        for char in T:
+            if char == '#':
+                if len(new_t) != 0:
+                    new_t = new_t[0:-1]
+            else:
+                new_t = new_t + char
+                
+        return new_t == new_s
+```
+### Complexity: O(n) , space: O(n)
+-----------------------
+10) https://leetcode.com/problems/min-stack/ </br>
+Design a stack that supports push, pop, top, and retrieving the minimum element in constant time.</br></br>
+push(x) -- Push element x onto stack.</br>
+pop() -- Removes the element on top of the stack.</br>
+top() -- Get the top element.</br>
+getMin() -- Retrieve the minimum element in the stack.
+ 
+```python
+class Node:
+     def __init__(self, val):
+        """
+        initialize your data structure here.
+        """
+        self.val = val
+        self.next = None
+        self.minimum_till_now = None
+        self.previous = None
+        
+class MinStack:
+
+    def __init__(self):
+        """
+        initialize your data structure here.
+        """
+        self.head = None
+        self.ptr = self.head
+    
+    def push(self, x: int) -> None:
+        
+        node = Node(x)
+        
+        if not self.head:
+            node.minimum_till_now = x
+            self.head = node
+            self.ptr = self.head
+        else:
+            node.minimum_till_now = min(x, self.ptr.minimum_till_now)
+            self.ptr.next = node
+            prev = self.ptr
+            self.ptr = self.ptr.next
+            self.ptr.previous = prev
+
+    def pop(self) -> None:
+        if self.head and self.head.next: 
+            self.ptr = self.ptr.previous
+            self.ptr.next = None
+
+        else:
+            self.head = None
+
+    def top(self) -> int:
+        return self.ptr.val
+
+    def getMin(self) -> int:
+        return self.ptr.minimum_till_now
+
+
+# Your MinStack object will be instantiated and called as such:
+# obj = MinStack()
+# obj.push(x)
+# obj.pop()
+# param_3 = obj.top()
+# param_4 = obj.getMin()
+```
+### Complexity: O(1) , space: O(n)
+-----------------------
