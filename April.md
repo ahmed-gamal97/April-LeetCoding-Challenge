@@ -167,6 +167,27 @@ class Solution:
 ```
 ### Complexity: O( nlen(word)log(len(word)) ) , space: O(n)
 -----------------------
+7) https://leetcode.com/problems/counting-elements/ </br>
+Given an integer array arr, count how many elements x there are, such that x + 1 is also in arr.
+If there're duplicates in arr, count them seperately. order of your output does not matter.
+
+```python
+class Solution:
+    def countElements(self, arr: List[int]) -> int:
+        
+        dict_elements = {elm:0 for elm in arr}
+        
+        counter = 0
+        
+        for elm in arr:
+            if elm+1 in dict_elements:
+                counter += 1
+                
+        return counter
+             
+```
+### Complexity: O(n) , space: O(n)
+-----------------------
 8) https://leetcode.com/problems/middle-of-the-linked-list/ </br>
 Given a non-empty, singly linked list with head node head, return a middle node of linked list.
 If there are two middle nodes, return the second middle node.
@@ -180,7 +201,7 @@ If there are two middle nodes, return the second middle node.
 class Solution:
     def middleNode(self, head: ListNode) -> ListNode:
                
-        # Can be solved by 2 pointers instead and it will be in opne pass 
+        # Can be solved by 2 pointers instead and it will be in one pass 
         
         if not head:
             return head
@@ -301,4 +322,138 @@ class MinStack:
 # param_4 = obj.getMin()
 ```
 ### Complexity: O(1) , space: O(n)
+-----------------------
+11) https://leetcode.com/problems/diameter-of-binary-tree/ </br>
+Given a binary tree, you need to compute the length of the diameter of the tree. The diameter of a binary tree is the length of the longest path between any two nodes in a tree. This path may or may not pass through the root.
+```python
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution:
+    def diameterOfBinaryTree(self, root: TreeNode) -> int:
+        
+        diameter = 0
+
+        def traverse_tree(root):
+            nonlocal diameter
+            if root:
+                l = traverse_tree(root.left)
+                r = traverse_tree(root.right)
+                summation = l + r
+                if summation > diameter:
+                    diameter = summation
+                return max(l,r) + 1
+            else:
+                return 0
+            
+        traverse_tree(root)
+        
+        return diameter
+        
+```
+### Complexity: O(#nodes) , space: O(#nodes)
+-----------------------
+12) https://leetcode.com/problems/last-stone-weight/ </br>
+We have a collection of stones, each stone has a positive integer weight.
+Each turn, we choose the two heaviest stones and smash them together.  Suppose the stones have weights x and y with x <= y.  The result of this smash is:
+- If x == y, both stones are totally destroyed;
+- If x != y, the stone of weight x is totally destroyed, and the stone of weight y has new weight y-x.
+- At the end, there is at most 1 stone left.  Return the weight of this stone (or 0 if there are no stones left.)
+```python
+class Solution:
+    def lastStoneWeight(self, stones: List[int]) -> int:
+        
+        stones.sort()
+        
+        while len(stones) > 1:
+            
+            if stones[-2] == stones[-1]:
+                # remove 2 elements
+                stones = stones[:-2]
+            else:
+                # remove 1 elements
+                stones[-2] = stones[-1] - stones[-2]
+                stones[-1] -= stones[-1]
+                stones = stones[:-1]
+                stones.sort() # we can use insertion sort instead because python uses quick sort
+            
+        return stones[0] if stones else 0      
+            
+```
+### Complexity: O(n**2) , space: O(1)
+-----------------------
+13) https://leetcode.com/problems/contiguous-array/  </br>
+Given a binary array, find the maximum length of a contiguous subarray with equal number of 0 and 1.
+```python
+class Solution:
+    def findMaxLength(self, nums: List[int]) -> int:
+        
+        count_to_index = {}
+        
+        count = 0
+        maximum = 0
+        
+        for ind,num in enumerate(nums):
+            if num == 1:
+                count += 1
+            else:
+                count -= 1
+            
+            if count == 0:
+                maximum = max(maximum, ind+1)
+                continue
+                
+            if count not in count_to_index:
+                count_to_index[count] = ind
+            else:
+                maximum = max(maximum, ind - count_to_index[count])
+  
+        return maximum
+         
+            
+```
+### Complexity: O(n) , space: O(n)
+-----------------------
+14) https://leetcode.com/problems/perform-string-shifts/  </br>
+You are given a string s containing lowercase English letters, and a matrix shift, where shift[i] = [direction, amount]:<br>
+- direction can be 0 (for left shift) or 1 (for right shift). 
+- amount is the amount by which string s is to be shifted.
+- A left shift by 1 means remove the first character of s and append it to the end.
+- Similarly, a right shift by 1 means remove the last character of s and add it to the beginning.
+Return the final string after all operations.
+```python
+class Solution:
+    def stringShift(self, s: str, shift: List[List[int]]) -> str:
+        
+        shifts = 0
+        length = len(s)
+        
+        for shi in shift:
+            if shi[0] == 1:
+                shifts += shi[1]
+            else:
+                shifts -= shi[1]
+                
+        if shifts == 0:
+            return s
+        
+        # shift right
+        elif shifts > 0:
+            shifts = shifts % length
+            s = s[-shifts:] + s[:-shifts]
+            
+        # shift left
+        else:
+            shifts *= - 1
+            shifts = shifts % length
+            s = s[shifts:] + s[:shifts]
+            
+        return s
+            
+```
+### Complexity: O(n) , space: O(1)
 -----------------------
