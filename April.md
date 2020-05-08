@@ -457,3 +457,163 @@ class Solution:
 ```
 ### Complexity: O(n) , space: O(1)
 -----------------------
+15) https://leetcode.com/problems/product-of-array-except-self/  </br>
+Given an array nums of n integers where n > 1,  return an array output such that output[i] is equal to the product of all the elements of nums except nums[i].
+```python
+class Solution:
+    class Solution:
+    def productExceptSelf(self, nums: List[int]) -> List[int]:
+        
+        length = len(nums)
+        
+        if length == 2:
+            return nums[::-1]
+                
+        left_product = []
+
+        prod = 1
+        for num in nums:
+            left_product.append(prod)
+            prod *= num
+                
+        prod = 1
+        for i in range(length-1, -1, -1):
+            left_product[i] *= prod
+            prod *= nums[i]
+            
+            
+        return left_product
+            
+```
+### Complexity: O(n) , space: O(1)
+-----------------------
+17) https://leetcode.com/problems/number-of-islands/  </br>
+Given a 2d grid map of '1's (land) and '0's (water), count the number of islands. An island is surrounded by water and is formed by connecting adjacent lands horizontally or vertically. You may assume all four edges of the grid are all surrounded by water.
+```python
+class Solution:
+    def numIslands(self, grid: List[List[str]]) -> int:
+        
+        if not grid:
+            return 0
+        
+        # Padding the matrix
+        rows = len(grid)
+        cols = len(grid[0])
+        
+        for i in range(rows):
+            grid[i].insert(0, '0')
+            grid[i].append('0')
+              
+        rows += 2
+        cols += 2
+                
+        grid.insert(0, ['0'] * (cols))
+        grid.append(['0'] * (cols))
+        
+        ###########################################
+        
+        one_pos = [(i,j) for i in range(rows) for j in range(cols) if grid[i][j] == '1']
+        visited = {}
+        
+        counter = 0
+        
+        for pos in one_pos:
+            if pos in visited:
+                continue
+            else:
+                # BFS
+                queue = [pos]
+                counter += 1
+                while queue:
+                    r,c = queue.pop(0)
+                    for i,j in [(r-1, c), (r+1, c), (r, c-1), (r, c+1)]:
+                        if grid[i][j] == '0':
+                            continue
+                        elif (i,j) not in visited:
+                            visited[(i,j)] = 0
+                            queue.append((i,j))
+                    grid[r][c] = '0'
+         
+        return counter
+                
+```
+### Complexity: O(n*m) , space: O(n*m)
+-----------------------
+18) https://leetcode.com/problems/minimum-path-sum/  </br>
+Given a m x n grid filled with non-negative numbers, find a path from top left to bottom right which minimizes the sum of all numbers along its path.
+
+Note: You can only move either down or right at any point in time.
+```python
+class Solution:
+    def minPathSum(self, grid: List[List[int]]) -> int:
+        
+        if not grid:
+            return 0
+                
+        num_rows = len(grid)
+        num_cols = len(grid[0])
+        
+        visited = {}
+        queue = [[(0,0), grid[0][0]]]
+        
+        while queue:
+            tup,sum_till_now = queue.pop(0)
+            r,c = tup
+            
+            for i,j in [(r,c+1), (r+1,c)]:
+                if i < num_rows and j < num_cols:
+                    if (i,j) in visited:
+                        queue[-1][-1] = min(queue[-1][-1], sum_till_now + grid[i][j])
+                    else:
+                        queue.append([(i,j), sum_till_now + grid[i][j]])
+                        visited[(i,j)] =  sum_till_now + grid[i][j]
+            # print(queue)
+        return sum_till_now
+          
+```
+### Complexity: O(n+m) , space: O(n+m)
+-----------------------
+19) https://leetcode.com/problems/search-in-rotated-sorted-array/  </br>
+- Suppose an array sorted in ascending order is rotated at some pivot unknown to you beforehand.
+(i.e., [0,1,2,4,5,6,7] might become [4,5,6,7,0,1,2]).
+- You are given a target value to search. If found in the array return its index, otherwise return -1.
+- You may assume no duplicate exists in the array.
+- Your algorithm's runtime complexity must be in the order of O(log n).
+
+Example 1:
+```python
+class Solution:
+    def search(self, nums: List[int], target: int) -> int:
+        
+        l = 0
+        r = len(nums)-1
+        
+        while l<=r:
+            mid = (l+r) // 2
+            
+            if nums[mid] == target:
+                return mid
+            if nums[l] == target:
+                return l
+            if nums[r] == target:
+                return r
+            
+            if nums[mid] > target:
+                # from l to m is sorted or from m to r is sorted
+                if target > nums[l] or nums[r] > nums[mid]:
+                    r = mid - 1
+                else:
+                    l = mid + 1
+            
+            else:
+                # from l to m is sorted or from m to r is sorted
+                if target < nums[r] or nums[l] < nums[mid]:
+                    l = mid + 1
+                else:
+                    r = mid - 1
+            
+        return -1
+          
+```
+### Complexity: O(log n) , space: O(1)
+-----------------------
