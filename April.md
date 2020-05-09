@@ -617,3 +617,48 @@ class Solution:
 ```
 ### Complexity: O(log n) , space: O(1)
 -----------------------
+20) https://leetcode.com/problems/construct-binary-search-tree-from-preorder-traversal/  </br>
+- Return the root node of a binary search tree that matches the given preorder traversal.
+- (Recall that a binary search tree is a binary tree where for every node, any descendant of node.left has a value < node.val, and any descendant of node.right has a value > node.val.  Also recall that a preorder traversal displays the value of the node first, then traverses node.left, then traverses node.right.)
+- It's guaranteed that for the given test cases there is always possible to find a binary search tree with the given requirements.
+
+```python
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution:
+    def bstFromPreorder(self, preorder: List[int]) -> TreeNode:
+        
+        if not preorder:
+            return None
+        
+        root_val = preorder[0]
+        root = TreeNode(root_val)
+        ptr = root
+        stack = [root]
+        
+        for num in preorder[1:]:
+            
+            node = TreeNode(num)
+            
+            if num < root_val:
+                ptr.left = node
+                stack.append(node)
+                ptr = ptr.left
+            else:
+                while stack and num > stack[-1].val:
+                    right = stack.pop()
+                right.right = node
+                ptr = node
+                stack.append(node)
+
+            root_val = num
+
+        return root  
+```
+### Complexity: O(n) , space: O(n)
+-----------------------
