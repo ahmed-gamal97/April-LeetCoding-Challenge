@@ -662,3 +662,90 @@ class Solution:
 ```
 ### Complexity: O(n) , space: O(n)
 -----------------------
+22) https://leetcode.com/problems/subarray-sum-equals-k/  </br>
+Given an array of integers and an integer k, you need to find the total number of continuous subarrays whose sum equals to k
+```python
+class Solution:
+    def subarraySum(self, nums: List[int], k: int) -> int:
+        
+        counter = 0
+        su = 0
+        sum_to_frequency = {0:1}
+        
+        for num in nums:
+            su += num
+            diff =  su - k
+            if diff in sum_to_frequency:
+                counter += sum_to_frequency[diff]
+                
+            if su in sum_to_frequency:
+                sum_to_frequency[su] += 1
+            else:
+                sum_to_frequency[su] = 1
+        return counter
+    
+```
+### Complexity: O(n) , space: O(n)
+-----------------------
+23) https://leetcode.com/problems/bitwise-and-of-numbers-range/  </br>
+Given a range [m, n] where 0 <= m <= n <= 2147483647, return the bitwise AND of all numbers in this range, inclusive.
+```python
+class Solution:
+    def rangeBitwiseAnd(self, m: int, n: int) -> int:
+        
+        n_in_binary = bin(n)[2:]
+        n_length = len(n_in_binary)
+        
+        m_in_binary = bin(m)[2:]
+        m_length = len(m_in_binary)
+        
+        if n_length > m_length:
+            return 0
+        else:
+            res = m
+            for i in range(m, n+1):
+                res &= i
+            return res
+    
+```
+### Complexity: O(n-m) , space: O(n)
+-----------------------
+24) https://leetcode.com/problems/lru-cache/  </br>
+- Design and implement a data structure for Least Recently Used (LRU) cache. It should support the following operations: get and put.
+- get(key) - Get the value (will always be positive) of the key if the key exists in the cache, otherwise return -1.
+- put(key, value) - Set or insert the value if the key is not already present. When the cache reached its capacity, it - should invalidate the least recently used item before inserting a new item.
+- The cache is initialized with a positive capacity.
+```python
+from collections import OrderedDict 
+
+class LRUCache:
+
+    def __init__(self, capacity: int):
+        self.lru = OrderedDict()
+        self.cap = capacity
+
+    def get(self, key: int) -> int:
+        if key in self.lru:
+            value = self.lru.pop(key)
+            self.lru[key] = value
+            return value
+        return -1
+        
+
+    def put(self, key: int, value: int) -> None:
+        if key in self.lru:
+            _ = self.get(key)
+        elif self.cap == 0:
+            self.lru.popitem(last=False)
+        else:
+            self.cap -= 1
+        self.lru[key] = value
+        
+
+# Your LRUCache object will be instantiated and called as such:
+# obj = LRUCache(capacity)
+# param_1 = obj.get(key)
+# obj.put(key,value)
+```
+### Complexity: O(1 ) , space: O(n)
+-----------------------
