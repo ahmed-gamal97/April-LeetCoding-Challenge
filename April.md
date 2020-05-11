@@ -662,6 +662,42 @@ class Solution:
 ```
 ### Complexity: O(n) , space: O(n)
 -----------------------
+21) https://leetcode.com/problems/leftmost-column-with-at-least-a-one/  </br>
+- binary matrix means that all elements are 0 or 1. For each individual row of the matrix, this row is sorted in non-decreasing order.
+- Given a row-sorted binary matrix binaryMatrix, return leftmost column index(0-indexed) with at least a 1 in it. If such index doesn't exist, return -1.
+- You can't access the Binary Matrix directly.  You may only access the matrix using a BinaryMatrix interface:
+- BinaryMatrix.get(row, col) returns the element of the matrix at index (row, col) (0-indexed).
+- BinaryMatrix.dimensions() returns a list of 2 elements [rows, cols], which means the matrix is rows * cols.
+- Submissions making more than 1000 calls to BinaryMatrix.get will be judged Wrong Answer.  Also, any solutions that attempt to circumvent the judge will result in disqualification.
+
+```python
+# """
+# This is BinaryMatrix's API interface.
+# You should not implement it, or speculate about its implementation
+# """
+#class BinaryMatrix(object):
+#    def get(self, x: int, y: int) -> int:
+#    def dimensions(self) -> list[]:
+
+class Solution:
+    def leftMostColumnWithOne(self, binaryMatrix: 'BinaryMatrix') -> int:
+        
+        r,c = binaryMatrix.dimensions()
+        
+        start_row = 0
+        start_col = c - 1
+        
+        while start_col >= 0 and start_row < r :
+            last = binaryMatrix.get(start_row,start_col)
+            if last:
+                start_col -= 1
+            else:
+                start_row += 1
+                
+        return -1 if not last and start_row == r and start_col == c-1 else start_col+1 
+```
+### Complexity: O(n+m) , space: O(1)
+-----------------------
 22) https://leetcode.com/problems/subarray-sum-equals-k/  </br>
 Given an array of integers and an integer k, you need to find the total number of continuous subarrays whose sum equals to k
 ```python
@@ -730,7 +766,6 @@ class LRUCache:
             self.lru[key] = value
             return value
         return -1
-        
 
     def put(self, key: int, value: int) -> None:
         if key in self.lru:
@@ -740,12 +775,103 @@ class LRUCache:
         else:
             self.cap -= 1
         self.lru[key] = value
-        
 
 # Your LRUCache object will be instantiated and called as such:
 # obj = LRUCache(capacity)
 # param_1 = obj.get(key)
 # obj.put(key,value)
 ```
-### Complexity: O(1 ) , space: O(n)
+### Complexity: O(1) , space: O(n)
+-----------------------
+25) https://leetcode.com/problems/jump-game/  </br>
+- Given an array of non-negative integers, you are initially positioned at the first index of the array.
+- Each element in the array represents your maximum jump length at that position.
+- Determine if you are able to reach the last index
+```python
+class Solution:
+    def canJump(self, nums: List[int]) -> bool:
+        
+        length = len(nums)
+        max_reach = 0
+        
+        for ind,num in enumerate(nums):
+            if max_reach < ind:
+                return False
+            elif max_reach >= length-1:
+                return True
+            max_reach = max(max_reach, ind+num)
+```
+### Complexity: O(n) , space: O(1)
+-----------------------
+28) https://leetcode.com/problems/first-unique-number/  </br>
+- You have a queue of integers, you need to retrieve the first unique integer in the queue.
+- Implement the FirstUnique class:
+- FirstUnique(int[] nums) Initializes the object with the numbers in the queue.
+- int showFirstUnique() returns the value of the first unique integer of the queue, and returns -1 if there is no such integer.
+- void add(int value) insert value to the queue.
+```python
+class node:
+     def __init__(self, val):
+        """
+        initialize your data structure here.
+        """
+        self.val = val
+        self.next = None
+        self.prev = None
+        
+class FirstUnique:
+
+    def __init__(self, nums: List[int]):
+        self.head = None
+        self.ptr = self.head
+        self.num_frequency = {}
+        
+        self.num_counter = collections.Counter(nums)
+        for num in nums:
+            if self.num_counter[num] == 1:
+                self.num_frequency[num] = node(num)
+                self.__insert(self.num_frequency[num])
+            
+    def showFirstUnique(self) -> int:
+        if self.head:
+            return self.head.val
+        return -1
+
+    def add(self, value: int) -> None:
+        if value in self.num_frequency:
+            self.__delete(self.num_frequency[value])
+        elif value in self.num_counter:
+            return 
+        else:
+            self.num_frequency[value] = node(value)
+            self.__insert(self.num_frequency[value])
+        
+    def __insert(self, node):
+        if not self.head:
+            self.head = node
+            self.ptr = self.head
+            
+        else:
+            self.ptr.next = node
+            node.prev = self.ptr
+            self.ptr = self.ptr.next
+            
+    def __delete(self, node):
+        
+        if node.prev:
+            ptr = node.prev
+            ptr.next = node.next
+            if node.next:
+                node.next.prev = ptr
+        else:
+            if node.next:
+                node.next.prev = None
+            self.head = node.next
+
+# Your FirstUnique object will be instantiated and called as such:
+# obj = FirstUnique(nums)
+# param_1 = obj.showFirstUnique()
+# obj.add(value)
+```
+### Complexity: O(1 for each method) , space: O(n)
 -----------------------
