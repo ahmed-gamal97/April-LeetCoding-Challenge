@@ -875,3 +875,37 @@ class FirstUnique:
 ```
 ### Complexity: O(1 for each method) , space: O(n)
 -----------------------
+29) https://leetcode.com/problems/binary-tree-maximum-path-sum/  </br>
+- Given a non-empty binary tree, find the maximum path sum.
+For this problem, a path is defined as any sequence of nodes from some starting node to any node in the tree along the parent-child connections. The path must contain at least one node and does not need to go through the root.
+```python
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def maxPathSum(self, root: TreeNode) -> int:
+        
+        max_sum = float('-inf')
+        
+        def maxPath(root):
+            
+            nonlocal max_sum
+            
+            if root:
+                l = maxPath(root.left)
+                r = maxPath(root.right)
+                max_sum = max(max_sum, l, r, root.val, l+root.val, r+root.val, l+r+root.val)
+                
+                return max(l+root.val, r+root.val, root.val)
+            else:
+                return float('-inf')
+        
+        maxPath(root)
+        
+        return max_sum
+```
+### Complexity: O(n) , space: O(n)
+-----------------------
